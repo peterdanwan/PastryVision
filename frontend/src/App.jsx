@@ -8,7 +8,9 @@ const BakeryPOS = () => {
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
 
-        const videoDevices = devices.filter((device) => device.kind === "videoinput");
+        const videoDevices = devices.filter(
+          (device) => device.kind === 'videoinput'
+        );
 
         if (videoDevices.length > 0) {
           // Select the first camera (primary camera)
@@ -23,10 +25,10 @@ const BakeryPOS = () => {
             videoRef.current.srcObject = stream;
           }
         } else {
-          console.error("No camera devices found.");
+          console.error('No camera devices found.');
         }
       } catch (error) {
-        console.error("Error accessing the camera:", error);
+        console.error('Error accessing the camera:', error);
       }
     };
 
@@ -40,6 +42,8 @@ const BakeryPOS = () => {
       }
     };
   }, []);
+
+  // Function handlePay --> onClick() on the button
 
   return (
     <div className='flex h-screen'>
@@ -67,6 +71,7 @@ const BakeryPOS = () => {
         </div>
         <div className='p-4'>
           {['Croissants', 'Cookie', 'Cake'].map((item) => (
+            // ItemCard ??
             <div key={item} className='mb-4 p-3 border rounded bg-gray-50'>
               <div className='flex items-center'>
                 <div className='w-20 h-20 bg-gray-300 mr-3 rounded'></div>

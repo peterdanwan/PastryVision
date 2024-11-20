@@ -7,25 +7,38 @@ const BakeryPOS = () => {
     const getCameraStream = async () => {
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-
         const videoDevices = devices.filter(
           (device) => device.kind === 'videoinput'
         );
 
         if (videoDevices.length > 0) {
-          // Select the first camera (primary camera)
-          const primaryCamera = videoDevices[0].deviceId;
-
-          // Request the stream from the primary camera
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { deviceId: { exact: primaryCamera } },
-          });
-
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
+          // The try catch makes sure that this code works on different operating systems
+          try {
+            // Attempt to access the primary camera with exact matching
+            const stream = await navigator.mediaDevices.getUserMedia({
+              video: { deviceId: { exact: videoDevices[0].deviceId } },
+            });
+            if (videoRef.current) {
+              videoRef.current.srcObject = stream;
+            }
+          } catch (error) {
+            if (error.name === 'OverconstrainedError') {
+              console.warn(
+                'Exact deviceId constraint failed. Falling back to default camera.'
+              );
+              // Fallback to default camera if exact match fails
+              const stream = await navigator.mediaDevices.getUserMedia({
+                video: true, 
+              });
+              if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+              }
+            } else {
+              throw error; 
+            }
           }
         } else {
-          console.error('No camera devices found.');
+          console.error('No video input devices found.');
         }
       } catch (error) {
         console.error('Error accessing the camera:', error);
@@ -36,14 +49,12 @@ const BakeryPOS = () => {
 
     // Cleanup: stop camera when component unmounts
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
+      if (videoRef.current?.srcObject) {
         const tracks = videoRef.current.srcObject.getTracks();
         tracks.forEach((track) => track.stop());
       }
     };
   }, []);
-
-  // Function handlePay --> onClick() on the button
 
   return (
     <div className='flex h-screen'>
@@ -71,7 +82,6 @@ const BakeryPOS = () => {
         </div>
         <div className='p-4'>
           {['Croissants', 'Cookie', 'Cake'].map((item) => (
-            // ItemCard ??
             <div key={item} className='mb-4 p-3 border rounded bg-gray-50'>
               <div className='flex items-center'>
                 <div className='w-20 h-20 bg-gray-300 mr-3 rounded'></div>

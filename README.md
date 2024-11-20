@@ -33,6 +33,8 @@ These are the main benefits we wish to offer:
 2. [Example with our Tech stack??](https://eliraneln.medium.com/real-time-object-detection-using-ml5-js-and-react-c47612c60852)
 3. [Vite - to configure our single page react app properly](https://vite.dev/guide/)
 4. [TailwindCSS - component classes used for styling the frontend](https://tailwindcss.com/docs/guides/vite)
+5. [FastAPI - to build our backend](https://fastapi.tiangolo.com/)
+6. [OpenCV - computer vision operations library](https://opencv.org/)
 
 ## Project Timeline
 

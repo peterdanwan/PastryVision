@@ -1,47 +1,72 @@
 # PastryVision
 
-## About the Authors
+**PastryVision** is a Computer Vision project that helps small pastry shops streamline operations, cut costs, and improve customer experience.
 
-`Course`: CVI620
-`Group members`: Peter Wan, Mimi Dang, Aryan Khurana, Jeremy Lee
-`Project Title`: PastryVision
+Using computer vision, it automatically detects and tallies items in a customer's cart, enabling a self-serve, efficient workflow!
 
-## What is PastryVision?
+## Project Overview
 
-`PastryVision` is a `Computer Vision` project that aims to serve small pastry shops and enhance their workflow.
-These are the main benefits we wish to offer:
+- **Course:** CVI620
+- **Project Title:** PastryVision
+- **Team Members:** Peter Wan, Mimi Dang, Aryan Khurana, Jeremy Lee
 
-- `pastry shops` will be able to become self-serve
-- `pastry shops` can save on plastic / barcode printing costs
-  - Items will retain their freshness since they won't be sealed
-- The technology used can be run locally on a machine, having no need to host the application on the web
-- Simple setup:
-  - React app: single page application (no routing involved)
-    - Most work will be done in:
-      - `frontend/src/App.jsx`
-      - `frontend/src/App.css`
-      -
-  - Connect with Computer Vision backend (...how?)
-- use computer vision to detect different pastry items
-  based on the pastry item, we can tally up a person's cart
-  we will have a camera that scans the items on the tray
-  people will still need to line up, but we don't need any apps or anything
+## Key Benefits of this product
+
+- Enable self-serve pastry shop operations
+- Reduce plastic and barcode printing costs
+- Maintain pastry item freshness
+- Run locally without web hosting
+- Simple, user-friendly setup
+
+## The workflow
+
+- Camera scans items on customer's tray
+- Detect and identify pastry items
+- Automatically tally cart contents
+- No additional apps required for customers
+
+## Technical Approach
+
+### Tech Stack
+
+- [React](https://react.dev)
+- [Vite](https://vitejs.dev)
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [TailwindCSS](https://tailwindcss.com)
+- [shadcn/ui](https://ui.shadcn.com)
+- [FastAPI](https://fastapi.tiangolo.com)
+- [Python](https://www.python.org)
+- [OpenCV](https://opencv.org)
+- [Google MediaPipe](https://developers.google.com/mediapipe)
+
+### Documentations
+
+- [Frontend Docs](./frontend/README.md)
+- [Backend Docs](./backend/README.md)
 
 ## References
 
 1. [MediaPipe](https://ai.google.dev/edge/mediapipe/solutions/studio)
-2. [Example with our Tech stack??](https://eliraneln.medium.com/real-time-object-detection-using-ml5-js-and-react-c47612c60852)
-3. [Vite - to configure our single page react app properly](https://vite.dev/guide/)
-4. [TailwindCSS - component classes used for styling the frontend](https://tailwindcss.com/docs/guides/vite)
-5. [FastAPI - to build our backend](https://fastapi.tiangolo.com/)
-6. [OpenCV - computer vision operations library](https://opencv.org/)
+2. [React & ML Object Detection Example](https://eliraneln.medium.com/real-time-object-detection-using-ml5-js-and-react-c47612c60852)
+3. [Vite Configuration Guide](https://vite.dev/guide/)
+4. [TailwindCSS Documentation](https://tailwindcss.com/docs/guides/vite)
+5. [MediaPipe Object Detection Example](https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/object_detection/python/object_detector.ipynb#scrollTo=huDfvvkvkqzC)
+6. [FastAPI - to build our backend](https://fastapi.tiangolo.com/)
+7. [OpenCV - computer vision operations library](https://opencv.org/)
 
 ## Project Timeline
 
-| Main components (briefly explain)                 | Tentative completion date | Assigned to |
-| ------------------------------------------------- | ------------------------- | ----------- |
-| Frontend: Rectangle showing live camera component | Dec 6                     | everyone    |
-| Frontend: Checkout/Cart section component         | Dec 6                     | everyone    |
-| Get bakery pictures / Dataset                     | Dec 6                     | everyone    |
-| Backend: Load images + resize                     | Dec 10                    | everyone    |
-| Backend: Build + Train dataset                    | Dec 10                    | everyone    |
+| Component                         | Tentative Completion | Assigned To |
+| --------------------------------- | -------------------- | ----------- |
+| Frontend: Live Camera Component   | Dec 6                | Entire Team |
+| Frontend: Checkout/Cart Section   | Dec 6                | Entire Team |
+| Bakery Image/Dataset Collection   | Dec 6                | Entire Team |
+| Backend: Image Loading & Resizing | Dec 10               | Entire Team |
+| Backend: Dataset Training         | Dec 10               | Entire Team |
+
+## Authors
+
+- [Aryan Khurana](github.com/AryanK1511)
+- [Peter Wan](#pastryvision)
+- [Mimi Dang](#pastryvision)
+- [Jeremy Lee](#pastryvision)

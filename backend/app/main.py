@@ -30,4 +30,5 @@ def read_root():
 @app.websocket('/ws/video-stream')
 async def video_stream(websocket: WebSocket):
     await websocket.accept()
-    pass
+    await websocket.send_text('Hello World')  # Sending "Hello World"
+    await websocket.close()

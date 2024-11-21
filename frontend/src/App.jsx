@@ -28,13 +28,13 @@ const BakeryPOS = () => {
               );
               // Fallback to default camera if exact match fails
               const stream = await navigator.mediaDevices.getUserMedia({
-                video: true, 
+                video: true,
               });
               if (videoRef.current) {
                 videoRef.current.srcObject = stream;
               }
             } else {
-              throw error; 
+              throw error;
             }
           }
         } else {

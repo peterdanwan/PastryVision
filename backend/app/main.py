@@ -11,24 +11,27 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-"""
-  Health Check Route
-"""
-
 
 @app.get('/')
 def read_root():
     return {'PastryVision Health Status': 'running'}
 
 
-"""
-  Web Socket connection for the frontend to connect with the backend
-"""
-
-
-# Ref Doc: https://fastapi.tiangolo.com/reference/websockets/?h=websoc
 @app.websocket('/ws/video-stream')
 async def video_stream(websocket: WebSocket):
     await websocket.accept()
-    await websocket.send_text('Hello World')  # Sending "Hello World"
+    print('WebSocket connection established.')
+
+    # try:
+    #     while True:
+    #         frame_data = await websocket.receive_text()
+
+    #         print(f'Received frame: {frame_data[:30]}...')
+
+    # except Exception as e:
+    #     print(f'Error: {e}')
+
+    # finally:
+    # await websocket.send_text('Hello World')
     await websocket.close()
+    print('WebSocket connection closed.')

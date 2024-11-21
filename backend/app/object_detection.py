@@ -1,3 +1,5 @@
+import base64
+
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -9,6 +11,25 @@ ROW_SIZE = 10  # pixels
 FONT_SIZE = 1
 FONT_THICKNESS = 1
 TEXT_COLOR = (255, 0, 0)  # red
+
+
+def base64_to_image(base64_string):
+    """Convert base64 string to MediaPipe Image object."""
+    # Remove the data URL prefix if present
+    if ',' in base64_string:
+        base64_string = base64_string.split(',')[1]
+
+    # Decode base64 string to bytes
+    image_bytes = base64.b64decode(base64_string)
+
+    # Convert bytes to numpy array
+    nparr = np.frombuffer(image_bytes, np.uint8)
+
+    # Decode image
+    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    # Convert to MediaPipe Image object
+    return mp.Image(image_format=mp.ImageFormat.SRGB, data=image)
 
 
 def visualize(image, detection_result) -> np.ndarray:
@@ -48,32 +69,40 @@ def visualize(image, detection_result) -> np.ndarray:
     return image
 
 
-IMAGE_FILE = 'app/assets/image.jpg'
-# STEP 2: Create an ObjectDetector object.
-base_options = python.BaseOptions(
-    model_asset_path='app/models/efficientdet.tflite'
-)
-options = vision.ObjectDetectorOptions(
-    base_options=base_options, score_threshold=0.5
-)
-detector = vision.ObjectDetector.create_from_options(options)
+def detect_objects(base64_image, model_path='app/models/efficientdet.tflite'):
+    """Perform object detection on a base64 encoded image."""
+    # Create detector
+    base_options = python.BaseOptions(model_asset_path=model_path)
+    options = vision.ObjectDetectorOptions(
+        base_options=base_options, score_threshold=0.5
+    )
+    detector = vision.ObjectDetector.create_from_options(options)
 
-# STEP 3: Load the input image.
-image = mp.Image.create_from_file(IMAGE_FILE)
+    # Convert base64 to image
+    image = base64_to_image(base64_image)
 
-# STEP 4: Detect objects in the input image.
-detection_result = detector.detect(image)
+    # Detect objects
+    detection_result = detector.detect(image)
 
-print(detection_result)
+    # Visualize results
+    image_copy = np.copy(image.numpy_view())
+    annotated_image = visualize(image_copy, detection_result)
+    rgb_annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
 
-# STEP 5: Process the detection result. In this case, visualize it.
-image_copy = np.copy(image.numpy_view())
-annotated_image = visualize(image_copy, detection_result)
-rgb_annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
+    return detection_result, rgb_annotated_image
 
-# Show the image in a window (with the correct window name as the first argument)
-cv2.imshow('Annotated Image', rgb_annotated_image)
 
-# Wait until a key is pressed, then close the window
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# Example usage:
+if __name__ == '__main__':
+    BASE64_IMAGE = ''
+
+    # Perform detection
+    detections, annotated_image = detect_objects(BASE64_IMAGE)
+
+    # Print detection results
+    print(detections)
+
+    # Display the annotated image
+    cv2.imshow('Annotated Image', annotated_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

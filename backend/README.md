@@ -2,77 +2,95 @@
 
 This is the [FastAPI](https://fastapi.tiangolo.com) backend for PastryVision Web Application ✨
 
-## Running the Backend Locally
+## Backend Setup and best Practices
 
-This guide walks you through how to set up and run your Python application using Poetry, an alternative to `pip` that simplifies dependency management, virtual environments, and more. By using Poetry, you can easily manage packages, isolate your project environment, and run your app with a single command.
-
-### Step 1: Install Poetry
-
-If you haven't installed Poetry yet, you can do so by following the installation instructions on the [Poetry website](https://python-poetry.org/docs/#installation) for your platform.
-
-### Step 2: Activate the Virtual Environment
-
-To activate the Poetry-managed virtual environment, run:
+### Setup Virtual Environment
 
 ```bash
-poetry shell
+# Create virtual environment
+python -m venv venv
 ```
 
-This command opens a new shell session with the virtual environment activated, where you can run Python commands as needed. You can now use the environment to run your app and interact with the dependencies.
-
-### Step 3: Install Dependencies
-
-Once you've initialized the project, you can install the dependencies by running:
+#### Windows
 
 ```bash
-poetry install
+# Activate virtual environment
+.\venv\Scripts\activate
 ```
 
-This will install all dependencies specified in your `pyproject.toml` file and create a virtual environment for your project. Poetry automatically manages your environment, so you don’t need to worry about creating or activating a virtual environment manually.
-
-### Step 5: Run the App
-
-Once the virtual environment is activated, you can run your app using `uvicorn`. Assuming your FastAPI app is located in `app.main:app`, run the following command:
+#### macOS/Linux
 
 ```bash
+# Activate virtual environment
+source venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
+# Install packages from requirements.txt
+pip install -r requirements.txt
+```
+
+### Managing Dependencies
+
+#### Adding a New Package
+
+```bash
+# Install the package
+pip3 install package_name
+
+# Update requirements.txt
+pip3 freeze > requirements.txt
+```
+
+#### Removing a Package
+
+```bash
+# Uninstall the package
+pip3 uninstall package_name
+
+# Update requirements.txt
+pip3 freeze > requirements.txt
+```
+
+### Deactivating Virtual Environment
+
+```bash
+# When you're done working
+deactivate
+```
+
+**Best Practices:**
+
+- Always activate your virtual environment before working
+- Use `pip freeze > requirements.txt` after adding/removing packages
+
+## Runnning the Backend and testing the socket connection
+
+### Start Backend Server
+
+```bash
+# Run with uvicorn
 uvicorn app.main:app --reload
 ```
 
-- `app.main:app`: This specifies the location of your FastAPI app object (in the `main.py` file inside the `app` directory).
-- `--reload`: This option enables auto-reloading of the app during development, so changes in the code are reflected without needing to restart the server.
+### WebSocket Testing with Postman
 
-Your application will now be running at `http://127.0.0.1:8000/` by default.
+#### WebSocket Connection Details
 
-### Additional Development Guidelines
+- **URL:** `ws://127.0.0.1:8000/ws/video-stream`
 
-#### Adding a Package to the Project
+#### Postman WebSocket Testing Steps
 
-To add a package to the project, use the following command:
+1. Open Postman
+2. Click "New" and select "WebSocket Request"
+3. Enter WebSocket URL: `ws://127.0.0.1:8000/ws/video-stream`
+4. Click "Connect"
+5. To send messages, type in message box and click "Send"
 
-```bash
-poetry add <package-name>
-```
+**Note:** Ensure backend is running before testing WebSocket connection.
 
-For example, to add `requests`:
+## Docs
 
-```bash
-poetry add requests
-```
-
-This will automatically update your `pyproject.toml` file and install the new package.
-
-#### Removing a Package from the Project
-
-If you want to remove a package, you can do so with:
-
-```bash
-poetry remove <package-name>
-```
-
-For example, to remove `requests`:
-
-```bash
-poetry remove requests
-```
-
-This will update the `pyproject.toml` file and uninstall the package from your environment.
+You can check out some documentation and references in the [\_docs](./_docs/) directory.

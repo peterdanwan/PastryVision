@@ -51,6 +51,7 @@ Using computer vision, it automatically detects and tallies items in a customer'
 3. [Vite Configuration Guide](https://vite.dev/guide/)
 4. [TailwindCSS Documentation](https://tailwindcss.com/docs/guides/vite)
 5. [MediaPipe Object Detection Example](https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/object_detection/python/object_detector.ipynb#scrollTo=huDfvvkvkqzC)
+6. [Training your own model using mediapipe](https://ai.google.dev/edge/mediapipe/solutions/customization/object_detector)
 
 ## Project Timeline
 

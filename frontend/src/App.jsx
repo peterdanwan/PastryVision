@@ -4,7 +4,11 @@ const BakeryPOS = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const socketRef = useRef(null);
+
   const [isStreaming, setIsStreaming] = useState(false);
+  const [annotatedImage, setAnnotatedImage] = useState(null);
+  const [items, setItems] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
 
   useEffect(() => {
     const getCameraStream = async () => {
@@ -47,13 +51,48 @@ const BakeryPOS = () => {
         console.log('Connected to WebSocket');
         startSendingFrames();
       };
+
+      socketRef.current.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.annotated_image && data.detections) {
+          const byteCharacters = atob(data.annotated_image);
+          const byteArrays = [];
+
+          for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+            const slice = byteCharacters.slice(offset, offset + 512);
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+            }
+            byteArrays.push(new Uint8Array(byteNumbers));
+          }
+
+          const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+          const imageUrl = URL.createObjectURL(blob);
+
+          setAnnotatedImage(imageUrl);
+
+          setItems(data.detections);
+          const newSubtotal = data.detections.reduce(
+            (sum, item) => sum + item.price,
+            0
+          );
+          setSubtotal(newSubtotal);
+
+          socketRef.current.close();
+        }
+      };
+
       socketRef.current.onclose = () => {
         console.log('Disconnected from WebSocket');
+      };
+
+      socketRef.current.onerror = (error) => {
+        console.error('WebSocket error:', error);
       };
     }
   }, [isStreaming]);
 
-  // Send frame every second
   const startSendingFrames = () => {
     const intervalId = setInterval(() => {
       if (
@@ -65,24 +104,21 @@ const BakeryPOS = () => {
         canvas.width = videoRef.current.videoWidth;
         canvas.height = videoRef.current.videoHeight;
 
-        // Draw the current frame from video to canvas
         ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
-        // Convert canvas to base64 image
         const imageData = canvas.toDataURL('image/jpeg');
-
-        // Send the image data to the backend
         socketRef.current.send(imageData);
       }
-    }, 1000); // send frame every 1 second
+    }, 5000);
 
-    // Cleanup interval when the component is unmounted or connection is closed
     return () => clearInterval(intervalId);
   };
 
+  const tax = subtotal * 0.13;
+  const total = subtotal + tax;
+
   return (
     <div className='flex h-screen'>
-      {/* Left side */}
       <div className='flex-1 p-4 bg-gray-50 h-[85vh]'>
         <div className='border p-4 mb-4 bg-white shadow-md'>
           <h1 className='text-xl font-bold text-center'>
@@ -90,41 +126,53 @@ const BakeryPOS = () => {
           </h1>
         </div>
         <div className='h-full rounded shadow-md flex items-center justify-center mb-20'>
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            className='w-full h-full object-cover rounded'
-          />
+          {annotatedImage ? (
+            <img
+              src={annotatedImage}
+              alt='Annotated Detection'
+              className='w-full h-full object-cover rounded'
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              className='w-full h-full object-cover rounded'
+            />
+          )}
         </div>
       </div>
-
-      {/* Right side */}
       <div className='w-80 border-l bg-white shadow-md'>
         <div className='p-4 border-b'>
           <h2 className='text-lg font-semibold'>Items</h2>
         </div>
         <div className='p-4'>
-          {['Croissants', 'Cookie', 'Cake'].map((item) => (
-            <div key={item} className='mb-4 p-3 border rounded bg-gray-50'>
-              <div className='flex items-center'>
-                <div className='w-20 h-20 bg-gray-300 mr-3 rounded'></div>
-                <span className='text-gray-700'>2x {item}</span>
+          {items.length > 0 ? (
+            items.map((item, index) => (
+              <div key={index} className='mb-4 p-3 border rounded bg-gray-50'>
+                <div className='flex items-center'>
+                  <div className='w-20 h-20 bg-gray-300 mr-3 rounded'></div>
+                  <span className='text-gray-700'>
+                    {item.item} - ${item.price.toFixed(2)}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className='text-gray-500'>No items detected.</p>
+          )}
           <div className='mt-8 border-t pt-4'>
             <div className='flex justify-between mb-2 text-gray-700'>
               <span>Subtotal:</span>
-              <span>$xx.xx</span>
+              <span>${subtotal.toFixed(2)}</span>
             </div>
             <div className='flex justify-between mb-2 text-gray-700'>
               <span>Tax (13%):</span>
-              <span>$xx.xx</span>
+              <span>${tax.toFixed(2)}</span>
             </div>
             <div className='flex justify-between font-bold text-gray-900'>
               <span>Total:</span>
-              <span>$xx.xx</span>
+              <span>${total.toFixed(2)}</span>
             </div>
           </div>
           <button className='w-full mt-8 p-3 bg-blue-500 text-white rounded hover:bg-blue-600'>

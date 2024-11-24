@@ -59,6 +59,8 @@ Using computer vision, it automatically detects and tallies items in a customer'
 9. [OpenCV - computer vision operations library](https://opencv.org/)
 10. [Python multipart parser](https://github.com/Kludex/python-multipart)
 11. [Mediapipe Examples GitHub Repo](https://github.com/google-ai-edge/mediapipe-samples)
+12. [BB Brain (example solution in Japan)](https://www.corp.bb-brain.co.jp/en.html)
+13. [Viscovery](https://viscovery.com/en/technology/)
 
 ## Project Timeline
 
@@ -67,8 +69,8 @@ Using computer vision, it automatically detects and tallies items in a customer'
 | Frontend: Live Camera Component   | Nov 21               | Entire Team |
 | Frontend: Checkout/Cart Section   | Nov 21               | Entire Team |
 | Bakery Image/Dataset Collection   | Nov 21               | Entire Team |
-| Backend: Image Loading & Resizing | Nov 24               | Entire Team |
-| Backend: Dataset Training         | Nov 24               | Entire Team |
+| Backend: Image Loading & Resizing | Nov 28               | Entire Team |
+| Backend: Dataset Training         | Nov 28               | Entire Team |
 
 ## Authors
 

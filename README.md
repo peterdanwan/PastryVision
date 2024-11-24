@@ -2,6 +2,8 @@
 
 **PastryVision** is a Computer Vision project that helps small pastry shops streamline operations, cut costs, and improve customer experience.
 
+![Demo Image](./assets/demo-image.png)
+
 Using computer vision, it automatically detects and tallies items in a customer's cart, enabling a self-serve, efficient workflow!
 
 ## Project Overview
@@ -52,18 +54,21 @@ Using computer vision, it automatically detects and tallies items in a customer'
 4. [TailwindCSS Documentation](https://tailwindcss.com/docs/guides/vite)
 5. [MediaPipe Object Detection Example](https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/object_detection/python/object_detector.ipynb#scrollTo=huDfvvkvkqzC)
 6. [Training your own model using mediapipe](https://ai.google.dev/edge/mediapipe/solutions/customization/object_detector)
-7. [FastAPI - to build our backend](https://fastapi.tiangolo.com/)
-8. [OpenCV - computer vision operations library](https://opencv.org/)
+7. [Bread dataset on roboflow](https://universe.roboflow.com/licenta-ntbhr/brv2/dataset/5)
+8. [FastAPI - to build our backend](https://fastapi.tiangolo.com/)
+9. [OpenCV - computer vision operations library](https://opencv.org/)
+10. [Python multipart parser](https://github.com/Kludex/python-multipart)
+11. [Mediapipe Examples GitHub Repo](https://github.com/google-ai-edge/mediapipe-samples)
 
 ## Project Timeline
 
 | Component                         | Tentative Completion | Assigned To |
 | --------------------------------- | -------------------- | ----------- |
-| Frontend: Live Camera Component   | Dec 6                | Entire Team |
-| Frontend: Checkout/Cart Section   | Dec 6                | Entire Team |
-| Bakery Image/Dataset Collection   | Dec 6                | Entire Team |
-| Backend: Image Loading & Resizing | Dec 10               | Entire Team |
-| Backend: Dataset Training         | Dec 10               | Entire Team |
+| Frontend: Live Camera Component   | Nov 21               | Entire Team |
+| Frontend: Checkout/Cart Section   | Nov 21               | Entire Team |
+| Bakery Image/Dataset Collection   | Nov 21               | Entire Team |
+| Backend: Image Loading & Resizing | Nov 24               | Entire Team |
+| Backend: Dataset Training         | Nov 24               | Entire Team |
 
 ## Authors
 

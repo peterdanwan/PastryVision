@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import Billing from './components/Billing/Billing';
 
-const BakeryPOS = () => {
+export default function BakeryPOS() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const socketRef = useRef(null);
 
   const [isStreaming, setIsStreaming] = useState(false);
   const [annotatedImage, setAnnotatedImage] = useState(null);
@@ -44,146 +44,102 @@ const BakeryPOS = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isStreaming) {
-      socketRef.current = new WebSocket('ws://localhost:8000/ws/video-stream');
-      socketRef.current.onopen = () => {
-        console.log('Connected to WebSocket');
-        startSendingFrames();
-      };
+  const captureFrameAndSend = async () => {
+    if (!videoRef.current) return;
 
-      socketRef.current.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.annotated_image && data.detections) {
-          const byteCharacters = atob(data.annotated_image);
-          const byteArrays = [];
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-          for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-            const slice = byteCharacters.slice(offset, offset + 512);
-            const byteNumbers = new Array(slice.length);
-            for (let i = 0; i < slice.length; i++) {
-              byteNumbers[i] = slice.charCodeAt(i);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+
+    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob(
+      async (blob) => {
+        if (!blob) return;
+
+        try {
+          const formData = new FormData();
+          formData.append('file', blob, 'captured_frame.jpg');
+
+          const response = await fetch(
+            'http://localhost:8000/api/analyze-image',
+            {
+              method: 'POST',
+              body: formData,
             }
-            byteArrays.push(new Uint8Array(byteNumbers));
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
 
-          const blob = new Blob(byteArrays, { type: 'image/jpeg' });
-          const imageUrl = URL.createObjectURL(blob);
+          const data = await response.json();
 
-          setAnnotatedImage(imageUrl);
-
-          setItems(data.detections);
-          const newSubtotal = data.detections.reduce(
-            (sum, item) => sum + item.price,
-            0
-          );
-          setSubtotal(newSubtotal);
-
-          socketRef.current.close();
+          if (data.annotated_image && data.detections) {
+            const imageUrl = `data:image/jpeg;base64,${data.annotated_image}`;
+            setAnnotatedImage(imageUrl);
+            setItems(data.detections);
+            const newSubtotal = data.detections.reduce(
+              (sum, item) => sum + item.price,
+              0
+            );
+            setSubtotal(newSubtotal);
+          } else {
+            setAnnotatedImage(null);
+            setItems([]);
+            setSubtotal(0);
+          }
+        } catch (error) {
+          console.error('Error sending image to backend:', error);
         }
-      };
-
-      socketRef.current.onclose = () => {
-        console.log('Disconnected from WebSocket');
-      };
-
-      socketRef.current.onerror = (error) => {
-        console.error('WebSocket error:', error);
-      };
-    }
-  }, [isStreaming]);
-
-  const startSendingFrames = () => {
-    const intervalId = setInterval(() => {
-      if (
-        videoRef.current &&
-        socketRef.current?.readyState === WebSocket.OPEN
-      ) {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        canvas.width = videoRef.current.videoWidth;
-        canvas.height = videoRef.current.videoHeight;
-
-        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-
-        const imageData = canvas.toDataURL('image/jpeg');
-        socketRef.current.send(imageData);
-      }
-    }, 5000);
-
-    return () => clearInterval(intervalId);
+      },
+      'image/jpeg',
+      0.95
+    );
   };
 
-  const tax = subtotal * 0.13;
-  const total = subtotal + tax;
-
   return (
-    <div className='flex h-screen'>
-      <div className='flex-1 p-4 bg-gray-50 h-[85vh]'>
-        <div className='border p-4 mb-4 bg-white shadow-md'>
-          <h1 className='text-xl font-bold text-center'>
-            Mom & Pop Shop Bakery
-          </h1>
-        </div>
-        <div className='h-full rounded shadow-md flex items-center justify-center mb-20'>
-          {annotatedImage ? (
-            <img
-              src={annotatedImage}
-              alt='Annotated Detection'
-              className='w-full h-full object-cover rounded'
-            />
-          ) : (
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className='w-full h-full object-cover rounded'
-            />
-          )}
-        </div>
-      </div>
-      <div className='w-80 border-l bg-white shadow-md'>
-        <div className='p-4 border-b'>
-          <h2 className='text-lg font-semibold'>Items</h2>
-        </div>
-        <div className='p-4'>
-          {items.length > 0 ? (
-            items.map((item, index) => (
-              <div key={index} className='mb-4 p-3 border rounded bg-gray-50'>
-                <div className='flex items-center'>
-                  <div className='w-20 h-20 bg-gray-300 mr-3 rounded'></div>
-                  <span className='text-gray-700'>
-                    {item.item} - ${item.price.toFixed(2)}
-                  </span>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className='text-gray-500'>No items detected.</p>
-          )}
-          <div className='mt-8 border-t pt-4'>
-            <div className='flex justify-between mb-2 text-gray-700'>
-              <span>Subtotal:</span>
-              <span>${subtotal.toFixed(2)}</span>
-            </div>
-            <div className='flex justify-between mb-2 text-gray-700'>
-              <span>Tax (13%):</span>
-              <span>${tax.toFixed(2)}</span>
-            </div>
-            <div className='flex justify-between font-bold text-gray-900'>
-              <span>Total:</span>
-              <span>${total.toFixed(2)}</span>
-            </div>
+    <div className='flex flex-col md:flex-row h-screen bg-gray-100'>
+      <div className='flex-1 p-4 h-scree overflow-auto'>
+        <div className='bg-white rounded-lg shadow-md overflow-hidden h-[calc(100vh-2rem)]'>
+          <div className='p-4 bg-slate-700 text-white'>
+            <h1 className='text-2xl font-bold text-center'>PastryVision</h1>
           </div>
-          <button className='w-full mt-8 p-3 bg-blue-500 text-white rounded hover:bg-blue-600'>
-            Pay
-          </button>
+          <div className='p-4 flex flex-col items-center space-y-4'>
+            <div className='w-[95%] aspect-video bg-gray-200 rounded-lg overflow-hidden'>
+              {annotatedImage ? (
+                <img
+                  src={annotatedImage}
+                  alt='Annotated Detection'
+                  className='w-full object-cover'
+                />
+              ) : (
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  className='w-full object-cover'
+                />
+              )}
+            </div>
+            <button
+              onClick={captureFrameAndSend}
+              className='w-full md:w-auto px-4 py-2 bg-slate-700 text-white rounded-md hover:bg-blue-600 transition-colors'
+            >
+              {isStreaming ? 'Capture Frame' : 'Camera Off'}
+            </button>
+          </div>
         </div>
       </div>
-
+      <div className='w-full md:w-96 p-4'>
+        <Billing subtotal={subtotal} items={items} />
+      </div>
       <canvas ref={canvasRef} style={{ display: 'none' }} />
     </div>
   );
-};
-
-export default BakeryPOS;
+}

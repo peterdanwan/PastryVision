@@ -1,1 +1,3 @@
-prices: dict = {'person': 123.65, 'chair': 48.34}
+# backend/app/pricing_model.py
+
+prices: dict = {"bread": 5}

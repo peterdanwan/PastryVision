@@ -1,7 +1,10 @@
-import base64
+# backend/app/main.py
 
+import base64
+from http.client import HTTPException
+import numpy as np
 import cv2
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI,  File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.object_detection import detect_objects
@@ -17,63 +20,50 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-"""
-  Health Check Route
-"""
-
-
 @app.get('/')
 def read_root():
+    """
+      Health Check Route
+    """
     return {'PastryVision Health Status': 'running'}
 
+@app.post('/api/analyze-image')
+async def upload_file(file: UploadFile = File(...)):        
+    """
+      HTTP POST Route for image analysis
+    """
 
-"""
-Web Socket connection to connect to the frontend
-"""
+    contents = await file.read()
+    
+    nparr = np.frombuffer(contents, np.uint8)
+    frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    
+    if frame is None:
+        raise HTTPException(status_code=400, detail="Invalid image format")
+        
+    detections, annotated_image = detect_objects(frame)
+    detected_items_with_prices = []
+    
+    if not detections:
+      return None
 
-
-@app.websocket('/ws/video-stream')
-async def video_stream(websocket: WebSocket):
-    await websocket.accept()
-    print('WebSocket connection established.')
-
-    try:
-        while True:
-            frame_data = await websocket.receive_text()
-
-            try:
-                detections, annotated_image = detect_objects(frame_data)
-                detected_items_with_prices = []
-
-                for detection in detections.detections:
-                    category_name = detection.categories[0].category_name
-
-                    if category_name in prices:
-                        detected_items_with_prices.append(
-                            {
-                                'item': category_name,
-                                'price': prices[category_name],
-                            }
-                        )
-
-                print(detected_items_with_prices)
-                _, buffer = cv2.imencode('.jpg', annotated_image)
-                encoded_image = base64.b64encode(buffer).decode('utf-8')
-
-                response = {
-                    'detections': detected_items_with_prices,
-                    'annotated_image': encoded_image,
+    for detection in detections:
+        category_name = detection.categories[0].category_name
+        
+        if category_name in prices:
+            detected_items_with_prices.append(
+                {
+                    'item': category_name,
+                    'price': prices[category_name],
                 }
+            )
 
-                await websocket.send_json(response)
+    _, buffer = cv2.imencode('.jpg', annotated_image)
+    encoded_image = base64.b64encode(buffer).decode('utf-8')
 
-            except Exception as detection_error:
-                error_response = {
-                    'error': 'Object detection failed',
-                    'details': str(detection_error),
-                }
-                print(f'Detection error: {detection_error}')
-                await websocket.send_json(error_response)
+    response = {
+        'detections': detected_items_with_prices,
+        'annotated_image': encoded_image,
+    }
 
-    except Exception as e:
-        print(f'WebSocket Error: {e}')
+    return response

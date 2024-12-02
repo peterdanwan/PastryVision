@@ -49,7 +49,7 @@
 
 ## Authors
 
-- [Aryan Khurana](github.com/AryanK1511)
-- [Peter Wan](#pastryvision)
-- [Mimi Dang](#pastryvision)
-- [Jeremy Lee](#pastryvision)
+- [Aryan Khurana](https://github.com/AryanK1511)
+- [Peter Wan](https://github.com/peterdanwan)
+- [Mimi Dang](https://github.com/Mimi-Dang)
+- [Jeremy Lee](https://github.com/EvilOlive1)

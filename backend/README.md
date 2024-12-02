@@ -27,7 +27,7 @@ python -m venv venv
 
 ```bash
 # Activate virtual environment
-.\venv\Scripts\activate.bat
+.\venv\Scripts\activate
 ```
 
 ### Activate Virtual Environment on macOS/Linux

@@ -1,96 +1,71 @@
-# PastryVision Backend
+# Start/Stop the PastryVision Backend Server
 
 This is the [FastAPI](https://fastapi.tiangolo.com) backend for PastryVision Web Application ✨
 
-## Backend Setup and best Practices
+## Prerequisites
 
-### Setup Virtual Environment
+- Install [Python](https://www.python.org/downloads/)
+
+## Create a Virtual Environment
+
+Within the `backend` folder, run the command below to create a `virtual environment` in which you will install the necessary backend dependencies for `PastryVision`:
 
 ```bash
-# Create virtual environment
+# Use the venv command to create a virtual environment folder called venv
 python -m venv venv
 ```
 
-#### Windows
+> [!NOTE]
+> This installs a `venv` folder within the `backend` folder that you'll install the necessary dependencies to.
+
+## Run the OS specific scripts to activate/deactivate your virtual environment
+
+> [!NOTE]
+> You must follow the [Create a Virtual Environment](#create-a-virtual-environment) step first.
+
+### Activate Virtual Environment on Windows
 
 ```bash
 # Activate virtual environment
-.\venv\Scripts\activate
+.\venv\Scripts\activate.bat
 ```
 
-#### macOS/Linux
+### Activate Virtual Environment on macOS/Linux
 
 ```bash
 # Activate virtual environment
 source venv/bin/activate
 ```
 
-### Install Dependencies
+### Deactivate Virtual Environment (works on every OS)
 
 ```bash
-# Install packages from requirements.txt
-pip install -r requirements.txt
-```
-
-### Managing Dependencies
-
-#### Adding a New Package
-
-```bash
-# Install the package
-pip3 install package_name
-
-# Update requirements.txt
-pip3 freeze > requirements.txt
-```
-
-#### Removing a Package
-
-```bash
-# Uninstall the package
-pip3 uninstall package_name
-
-# Update requirements.txt
-pip3 freeze > requirements.txt
-```
-
-### Deactivating Virtual Environment
-
-```bash
-# When you're done working
+# Deactivate virtual environment
 deactivate
 ```
 
-**Best Practices:**
+## Installing the Project's Dependencies
 
-- Always activate your virtual environment before working
-- Use `pip freeze > requirements.txt` after adding/removing packages
-
-## Runnning the Backend and testing the socket connection
-
-### Start Backend Server
+To install PastryVision's necessary backend dependencies, run the following command in the `backend` folder:
 
 ```bash
-# Run with uvicorn
+# Install packages from requirements.txt (your venv folder should get larger)
+pip install -r requirements.txt
+```
+
+## Start/Stop the Backend Server
+
+To start the backend server, run the following command within the `backend` folder:
+
+```bash
+# Start the backend server with uvicorn
 uvicorn app.main:app --reload
 ```
 
-### WebSocket Testing with Postman
+> [!NOTE]
+> The Backend Server will be hosted on `http://127.0.0.1:8000`.  
+> To _stop_ the backend server, go to the terminal where `uvicorn app.main:app --reload` was run, and then press `Ctrl + C` to stop the server.
 
-#### WebSocket Connection Details
-
-- **URL:** `ws://127.0.0.1:8000/ws/video-stream`
-
-#### Postman WebSocket Testing Steps
-
-1. Open Postman
-2. Click "New" and select "WebSocket Request"
-3. Enter WebSocket URL: `ws://127.0.0.1:8000/ws/video-stream`
-4. Click "Connect"
-5. To send messages, type in message box and click "Send"
-
-**Note:** Ensure backend is running before testing WebSocket connection.
-
-## Docs
+# Docs
 
 You can check out some documentation and references in the [\_docs](./_docs/) directory.

@@ -1,35 +1,23 @@
 # PastryVision
 
-**PastryVision** is a Computer Vision project that helps small pastry shops streamline operations, cut costs, and improve customer experience.
-
 ![Demo Image](./assets/demo-image.png)
 
-Using computer vision, it automatically detects and tallies items in a customer's cart, enabling a self-serve, efficient workflow!
+**PastryVision** is a computer vision project designed to help small pastry shops modernize their operations. By automatically detecting and tallying items in a customer's cart, the system enables a self-serve workflow that enhances efficiency while reducing costs. It eliminates the need for plastic packaging and barcode printing, promotes pastry freshness, and operates locally without requiring web hosting. With its simple and user-friendly setup, PastryVision empowers pastry shops to deliver a modern customer experience effortlessly.
 
-## Project Overview
+## Running the Project
 
-- **Course:** CVI620
-- **Project Title:** PastryVision
-- **Team Members:** Peter Wan, Mimi Dang, Aryan Khurana, Jeremy Lee
+1. [Start/Stop the frontend client](https://github.com/peterdanwan/PastryVision/tree/main/frontend/README.md)
+2. [Start/Stop the backend server](https://github.com/peterdanwan/PastryVision/tree/main/backend/README.md)
 
-## Key Benefits of this product
+## PastryVision Workflow
 
-- Enable self-serve pastry shop operations
-- Reduce plastic and barcode printing costs
-- Maintain pastry item freshness
-- Run locally without web hosting
-- Simple, user-friendly setup
+1. The frontend camera scans the pastry items on customer's tray.
+2. The customer takes a snapshot of their tray.
+3. The snapshot is sent to the backend to detect and identify the pastry items on the tray.
+4. The backend automatically tallies the quantities and costs of the tray and sends this information to the frontend.
+5. The customer can confirm the cost breakdown provided from the backend and proceed to pay or cancel their transaction.
 
-## The workflow
-
-- Camera scans items on customer's tray
-- Detect and identify pastry items
-- Automatically tally cart contents
-- No additional apps required for customers
-
-## Technical Approach
-
-### Tech Stack
+## Tech Stack
 
 - [React](https://react.dev)
 - [Vite](https://vitejs.dev)
@@ -40,11 +28,8 @@ Using computer vision, it automatically detects and tallies items in a customer'
 - [Python](https://www.python.org)
 - [OpenCV](https://opencv.org)
 - [Google MediaPipe](https://developers.google.com/mediapipe)
-
-### Documentations
-
-- [Frontend Docs](./frontend/README.md)
-- [Backend Docs](./backend/README.md)
+- [TensorFlow](https://www.tensorflow.org/)
+- [NumPy](https://numpy.org/)
 
 ## References
 
@@ -61,16 +46,6 @@ Using computer vision, it automatically detects and tallies items in a customer'
 11. [Mediapipe Examples GitHub Repo](https://github.com/google-ai-edge/mediapipe-samples)
 12. [BB Brain (example solution in Japan)](https://www.corp.bb-brain.co.jp/en.html)
 13. [Viscovery](https://viscovery.com/en/technology/)
-
-## Project Timeline
-
-| Component                         | Tentative Completion | Assigned To |
-| --------------------------------- | -------------------- | ----------- |
-| Frontend: Live Camera Component   | Nov 21               | Entire Team |
-| Frontend: Checkout/Cart Section   | Nov 21               | Entire Team |
-| Bakery Image/Dataset Collection   | Nov 21               | Entire Team |
-| Backend: Image Loading & Resizing | Nov 28               | Entire Team |
-| Backend: Dataset Training         | Nov 28               | Entire Team |
 
 ## Authors
 

@@ -47,7 +47,11 @@
 12. [BB Brain (example solution in Japan)](https://www.corp.bb-brain.co.jp/en.html)
 13. [Viscovery](https://viscovery.com/en/technology/)
 
-## Authors
+## About the Team
+
+PastryVision was developed for the CVI620 NZA class at Seneca Polytechnic (Fall 2024), under Professor Savita Seharawat's guidance.
+
+### Team Members
 
 - [Aryan Khurana](https://github.com/AryanK1511)
 - [Peter Wan](https://github.com/peterdanwan)

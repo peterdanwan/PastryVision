@@ -27,4 +27,4 @@ npm run dev
 
 > [!NOTE]
 > The Frontend Client will be hosted on `http://localhost:5173`.  
-> To _stop_ the frontend client, go to the terminal twhere `npm run dev` was run, and then press `Ctrl + C` to stop the client.
+> To _stop_ the frontend client, go to the terminal where `npm run dev` was run, and then press `Ctrl + C` to stop the client.
